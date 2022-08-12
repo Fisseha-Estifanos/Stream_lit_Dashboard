@@ -27,7 +27,11 @@ def loadData():
 
 def selectHashTag():
     df = loadData()
-    hashTags = st.multiselect("choose combination of hashtags", list(df['hashtags'].unique()))
+
+    # take the rows from that have values in the hashtag columns
+    hashtags_list_df = df["clean_hashtags"]
+    # hashTags = st.multiselect("choose combination of hashtags", list(df['hashtags'].unique()))
+    hashTags = st.multiselect("choose combination of hashtags", hashtags_list_df)
     if hashTags:
         df = df[np.isin(df, hashTags).any(axis=1)]
         st.write(df)
@@ -35,8 +39,8 @@ def selectHashTag():
 
 def selectLocAndAuth():
     df = loadData()
-    location = st.multiselect("choose Location of tweets", list(df['location'].unique()))
-    lang = st.multiselect("choose Language of tweets", list(df['language'].unique()))
+    location = st.multiselect("choose Location of tweets", list(df['place'].unique()))
+    lang = st.multiselect("choose Language of tweets", list(df['lang'].unique()))
 
     if location and not lang:
         df = df[np.isin(df, location).any(axis=1)]
@@ -86,8 +90,8 @@ def stBarChart():
 
 def langPie():
     df = loadData()
-    dfLangCount = pd.DataFrame({'Tweet_count': df.groupby(['language'])['original_text'].count()}).reset_index()
-    dfLangCount["language"] = dfLangCount["language"].astype(str)
+    dfLangCount = pd.DataFrame({'Tweet_count': df.groupby(['lang'])['original_text'].count()}).reset_index()
+    dfLangCount["language"] = dfLangCount["lang"].astype(str)
     dfLangCount = dfLangCount.sort_values("Tweet_count", ascending=False)
     dfLangCount.loc[dfLangCount['Tweet_count'] < 10, 'lang'] = 'Other languages'
     st.title(" Tweets Language pie chart")
