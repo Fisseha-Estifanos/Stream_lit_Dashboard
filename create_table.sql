@@ -16,5 +16,7 @@ CREATE TABLE IF NOT EXISTS TweetInformation (
     possibly_sensitive TEXT DEFAULT NULL,
     hashtags TEXT DEFAULT NULL,
     user_mentions TEXT DEFAULT NULL,
-    place TEXT  NULL
+    place TEXT  NULL,
+    clean_hashtags TEXT NULL,
+    clean_mentions TEXT NULL
 );
