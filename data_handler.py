@@ -6,6 +6,8 @@ from sqlite3 import Error
 
 def DBConnect(dbName=None):
     """
+    A data base connection creator method
+
     Parameters
     ----------
     dbName :
@@ -23,6 +25,8 @@ def DBConnect(dbName=None):
 
 def execute_query(connection: sqlite3.Connection, query:str) -> None:
     """
+    A data base query executor method, based on a given connection string and a query string
+
     Parameters
     ----------
     connection :
@@ -38,6 +42,13 @@ def execute_query(connection: sqlite3.Connection, query:str) -> None:
     fd = open(query, 'r')
     sql_query = fd.read()
     fd.close()
+
+    try:
+        cursor.execute(sql_query)
+        connection.commit()
+        print("Query executed successfully")
+    except Error as e:
+        print(f"The error '{e}' occurred")
 
 
 if __name__ == "__main__":
