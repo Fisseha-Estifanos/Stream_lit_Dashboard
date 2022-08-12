@@ -1,0 +1,4 @@
+[core]
+    autostage = true
+['remote "default"']
+    url = C:\Users\f0x-tr0t\Documents\education\datascience\dvc-storage
