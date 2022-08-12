@@ -29,6 +29,7 @@ def selectHashTag():
     """
     hashtags filter
     """
+    print('hashtag run start')
     df = loadData()
     df.drop(columns=['hashtags', 'user_mentions'], axis = 1, inplace = True)
     
@@ -38,6 +39,7 @@ def selectHashTag():
     if hashTags:
         df = df[np.isin(df, hashTags).any(axis=1)]
         st.write(df)
+    print('hashtag run end')
 
 
 def selectUserMentions():
