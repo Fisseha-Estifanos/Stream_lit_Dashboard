@@ -4,12 +4,6 @@ import pandas as pd
 import sqlite3
 from sqlite3 import Error
 
-
-sys.path.append(os.path.abspath(os.path.join("../..")))
-sys.path.append(".")
-sys.path.append("..")
-from defaults import *
-
 def DBConnect(dbName=None):
     """
     Parameters
