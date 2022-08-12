@@ -70,10 +70,9 @@ def insert_to_tweet_table(connection: sqlite3.Connection, df: pd.DataFrame, tabl
     -------
     """
     for _, row in df.iterrows():
-        sqlQuery = f"""INSERT INTO {table_name} (statuses_count, created_at, source, original_text, polarity,
-        subjectivity, favorite_count, retweet_count, screen_name, followers_count, friends_count, possibly_sensitive, hashtags, user_mentions, location,language)
-             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
-        data = (row[0], row[1], row[2], row[3], (row[4]), (row[5]), row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
+        sqlQuery = f"""INSERT INTO {table_name} (created_at, source, original_text, polarity, subjectivity, lang, favorite_count, statuses_count, retweet_count, screen_name, original_author, followers_count, friends_count, possibly_sensitive, hashtags, user_mentions, place)
+             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+        data = (row[0], row[1], row[2], row[3], (row[4]), (row[5]), row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16])
 
         try:
             cur = connection.cursor()
@@ -88,7 +87,6 @@ def insert_to_tweet_table(connection: sqlite3.Connection, df: pd.DataFrame, tabl
     return
 
 
-#def db_execute_fetch(*args, many=False, tablename='', rdf=True, **kwargs) -> pd.DataFrame:
 def db_execute_fetch(connection:sqlite3.Connection, selection_query : str, dbName : str, rdf=True, many = False) -> pd.DataFrame:
     """
     A method to execute a fetch query based on a given selection query 
@@ -138,8 +136,7 @@ if __name__ == "__main__":
     execute_query(connection=connection, query='create_table.sql')
 
     df = pd.read_csv('clean_data.csv')
-    sample_df = df[:10].copy()
-    # print(sample_df.columns)
+    sample_df = df.copy()
     
     insert_to_tweet_table(connection=connection, df=sample_df, table_name='TweetInformation')
 
