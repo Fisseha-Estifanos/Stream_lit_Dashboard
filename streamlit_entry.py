@@ -26,19 +26,54 @@ def loadData():
 
 
 def selectHashTag():
+    """
+    hashtags filter
+    """
     df = loadData()
-
+    df.drop(columns=['hashtags', 'user_mentions'], axis = 1, inplace = True)
+    
     # take the rows from that have values in the hashtag columns
-    hashtags_list_df = df["clean_hashtags"]
-    # hashTags = st.multiselect("choose combination of hashtags", list(df['hashtags'].unique()))
+    hashtags_list_df = df["clean_hashtags"].unique()
     hashTags = st.multiselect("choose combination of hashtags", hashtags_list_df)
     if hashTags:
         df = df[np.isin(df, hashTags).any(axis=1)]
         st.write(df)
 
 
+def selectUserMentions():
+    """
+    User mention filter
+    """
+    df = loadData()
+    df.drop(columns=['hashtags', 'user_mentions'], axis = 1, inplace = True)
+
+    # take the rows from that have values in the user mention columns
+    user_mention_list_df = df["clean_mentions"].unique()
+    mentions = st.multiselect("choose combination of user mentions", user_mention_list_df)
+    if mentions:
+        df = df[np.isin(df, mentions).any(axis=1)]
+        st.write(df)
+
+
+def selectSource():
+    """
+    Source of tweets filter
+    """
+    df = loadData()
+    df.drop(columns=['hashtags', 'user_mentions'], axis = 1, inplace = True)
+
+    # take the rows from that have values in the source columns
+    source_list_df = df["source"].unique()
+    source = st.multiselect("choose combination of user mentions", source_list_df)
+    if source:
+        df = df[np.isin(df, source).any(axis=1)]
+        st.write(df)
+
+
 def selectLocAndAuth():
     df = loadData()
+    df.drop(columns=['hashtags', 'user_mentions'], axis = 1, inplace = True)
+
     location = st.multiselect("choose Location of tweets", list(df['place'].unique()))
     lang = st.multiselect("choose Language of tweets", list(df['lang'].unique()))
 
@@ -66,19 +101,27 @@ def barChart(data, title, X, Y):
 
 def wordCloud():
     df = loadData()
+    df.drop(columns=['hashtags', 'user_mentions'], axis = 1, inplace = True)
+
     cleanText = ''
     for text in df['original_text']:
         tokens = str(text).lower().split()
+        #print(f"token: {type(tokens)}")
+        for tkn in tokens:
+            if (tkn != 'https'):
+                cleanText += " ".join(tokens) + " "
+                #print(f"clean_text: {type(cleanText)}")
 
-        cleanText += " ".join(tokens) + " "
 
     wc = WordCloud(width=650, height=450, background_color='white', min_font_size=5).generate(cleanText)
     st.title("Tweet Text Word Cloud")
     st.image(wc.to_array())
-
+wordCloud()
 
 def stBarChart():
     df = loadData()
+    df.drop(columns=['hashtags', 'user_mentions'], axis = 1, inplace = True)
+
     dfCount = pd.DataFrame({'Tweet_count': df.groupby(['retweet_count'])['original_text'].count()}).reset_index()
     dfCount["retweet_count"] = dfCount["retweet_count"].astype(str)
     dfCount = dfCount.sort_values("Tweet_count", ascending=False)
@@ -106,16 +149,37 @@ def langPie():
         st.write(dfLangCount)
 
 
-st.title("Twitter Data Display")
+st.title("Twitter Data Analysis")
+
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'>Hash tag filters</p>", unsafe_allow_html=True)
 selectHashTag()
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'></p>", unsafe_allow_html=True)
 
-st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'>Section Break</p>", unsafe_allow_html=True)
 
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'>User mention filters</p>", unsafe_allow_html=True)
+selectUserMentions()
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'></p>", unsafe_allow_html=True)
+
+
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'>Location and Language filters</p>", unsafe_allow_html=True)
 selectLocAndAuth()
-st.title("Data Visualizations")
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'></p>", unsafe_allow_html=True)
+
+
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'>Source filters</p>", unsafe_allow_html=True)
+selectSource()
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'></p>", unsafe_allow_html=True)
+
+
+st.title("Twitter Data Visualizations")
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'>Word Cloud visualizations</p>", unsafe_allow_html=True)
 wordCloud()
-with st.expander("Show More Graphs"):
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'></p>", unsafe_allow_html=True)
+
+
+with st.expander("Show More Graphical visualizations"):
     stBarChart()
     langPie()
+
 
 print('over and out')
