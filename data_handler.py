@@ -4,6 +4,7 @@ import pandas as pd
 import sqlite3
 from sqlite3 import Error
 
+
 def DBConnect(dbName=None):
     """
     A data base connection creator method
@@ -134,3 +135,13 @@ def db_execute_fetch(connection:sqlite3.Connection, selection_query : str, dbNam
 if __name__ == "__main__":
     connection = DBConnect(dbName='tweets.db')
     execute_query(connection=connection, query='create_table.sql')
+
+    df = pd.read_csv('clean_data.csv')
+    sample_df = df[:10].copy()
+    # print(sample_df.columns)
+    
+    insert_to_tweet_table(connection=connection, df=sample_df, table_name='TweetInformation')
+
+    select_query = "select * from TweetInformation"
+    returned_df = db_execute_fetch(connection, select_query, dbName="tweets.db", rdf=True)
+    returned_df.info()
