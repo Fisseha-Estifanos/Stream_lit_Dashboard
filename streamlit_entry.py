@@ -23,6 +23,13 @@ def loadData():
     df = db_execute_fetch(connection, query, dbName="tweets.db", rdf=True)
     return df
 
+def selectHashTag():
+    df = loadData()
+    hashTags = st.multiselect("choose combination of hashtags", list(df['hashtags'].unique()))
+    if hashTags:
+        df = df[np.isin(df, hashTags).any(axis=1)]
+        st.write(df)
+
 
 
 
