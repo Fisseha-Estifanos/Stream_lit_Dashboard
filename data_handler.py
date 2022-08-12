@@ -80,7 +80,8 @@ def insert_to_tweet_table(connection: sqlite3.Connection, df: pd.DataFrame, tabl
             cur.execute(sqlQuery, data)
             # Commit your changes in the database
             connection.commit()
-            print("Data Inserted Successfully")
+            print(f"{_}: Data Inserted Successfully")
+            cur.close()
         except Exception as e:
             connection.rollback()
             print("Error: ", e)
