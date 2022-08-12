@@ -100,3 +100,19 @@ def langPie():
         st.plotly_chart(fig)
     with colB2:
         st.write(dfLangCount)
+
+
+st.title("Twitter Data Display")
+selectHashTag()
+st.markdown("<p style='padding:10px; background-color:#000000;color:#00ECB9;font-size:16px;border-radius:10px;'>Section 
+
+Break</p>", unsafe_allow_html=True)
+
+selectLocAndAuth()
+st.title("Data Visualizations")
+wordCloud()
+with st.expander("Show More Graphs"):
+    stBarChart()
+    langPie()
+
+print('over and out')
