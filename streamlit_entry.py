@@ -72,6 +72,7 @@ def wordCloud():
     st.title("Tweet Text Word Cloud")
     st.image(wc.to_array())
 
+
 def stBarChart():
     df = loadData()
     dfCount = pd.DataFrame({'Tweet_count': df.groupby(['retweet_count'])['original_text'].count()}).reset_index()
@@ -82,3 +83,20 @@ def stBarChart():
     title = f"Top {num} Ranking By Number of tweets"
     barChart(dfCount.head(num), title, "retweet_count", "Tweet_count")
 
+
+def langPie():
+    df = loadData()
+    dfLangCount = pd.DataFrame({'Tweet_count': df.groupby(['language'])['original_text'].count()}).reset_index()
+    dfLangCount["language"] = dfLangCount["language"].astype(str)
+    dfLangCount = dfLangCount.sort_values("Tweet_count", ascending=False)
+    dfLangCount.loc[dfLangCount['Tweet_count'] < 10, 'lang'] = 'Other languages'
+    st.title(" Tweets Language pie chart")
+    fig = px.pie(dfLangCount, values='Tweet_count', names='language', width=500, height=350)
+    fig.update_traces(textposition='inside', textinfo='percent+label')
+
+    colB1, colB2 = st.columns([2.5, 1])
+
+    with colB1:
+        st.plotly_chart(fig)
+    with colB2:
+        st.write(dfLangCount)
