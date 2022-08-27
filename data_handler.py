@@ -8,7 +8,7 @@ from sqlite3 import Error
 
 def DBConnect(dbName=None):
     """
-    A data base connection creator method
+    A data base connection creator method.
 
     Parameters
     ----------
